@@ -3,7 +3,7 @@ import anchor from "../../img/닫는꺾쇠.png";
 import profile from "../../img/사진 가져오기.png";
 import axios from 'axios';
 // import { css } from '@emotion/react'
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useCallback, useMemo } from "react";
 
 export const Container = styled.div`
     height: 100vh;
@@ -161,6 +161,7 @@ border-radius: 100%;
 border: 1px solid lightgray;
     background-color: #FFFF;
     cursor: pointer;
+    z-index: 100000000;
 `;
 const ShowImg = styled.img`
 position:relative;
@@ -250,24 +251,28 @@ height: 500px;
 justify-content: space-between;
 `;
 const Main = styled.div`
-width: 100vw;
-height: 100%;
-display: flex;
+position: absolute;
 `;
 const Random = (min, max) => Math.random() * (max - min) + min;
 const getRandom = Math.round(Random(10, 70));
-console.log(Math.floor(Random(10, 70)));
 const Images = styled.img`
 position: relative;
 top:${getRandom}vh;
-width: 20vw;
-height: 20vh;
+width: 10vw;
+height: 15vh;
 border: 10px solid white ;
 border-radius: 10px; 
-background-color: white;
 object-fit: contain;
 object-position: 50% 50%;
 margin-left: 60px;
+border: 8px solid #FFFFFF;
+background-color: #FFFFFF;
+transition: all 0.5s;
+box-shadow: 5px 10px 10px 2px rgba(0, 0, 0, 0.1);
+&:hover{
+    width: 15vw;
+    height: 25vh;
+}
 `;
 const Div = styled.div`
 width: 100vw;
@@ -275,46 +280,68 @@ height: 100%;
 `;
 const Dive = styled.div`
 display: flex;
+height: 25vh;
+width: 25vw;
+`;
+const Dives = styled.div`
+top: 55px;
 `;
 
-export const Frames = (props) => {
-    console.log(props.isImg);
-    return (
-        <Dive>
-            {props.isImg ?
-                <Images src={profile}></Images> : null
-            }
-        </Dive>
-    );
-}
-
-export const Box = () => {
+export const Box = ({ history }) => {
+    const handleBackList = useCallback(() => {
+        const params = {
+            pathname: '/'
+        }
+        history.push(params)
+    }, [history]);
     const [active, setActive] = useState(false);
     const [show, setShow] = useState(false);
     const [isImg, setIsImg] = useState(false);
-    const [previewImg, setPreviewImg] = useState(null);
+    const [previewImg, setPreviewImg] = useState([]);
+    const [img, setImg] = useState([]);
+    const Frames = (props) => {
+        console.log(props.imageSrc[0]);
+        return (
+            <Dive>
+                {props.isImg ? (<Images src={props.imageSrc}></Images>)
+                    : null
+                }
+            </Dive>
+        );
+    }
     const toggle = () => {
         setActive(!active);
     }
+    // const [date, setDate] = useState([]);
+
+
     const insertImg = (e) => {
         // console.log(e.target.files[0]);
         let reader = new FileReader();
 
         if (e.target.files[0]) {
             reader.readAsDataURL(e.target.files[0]);
+            // const h = img[0].lastModifiedDate;
+            // setDate([date.push(h)]);
+            // console.log(date);
+            setImg([...img, e.target.files[0]]);
         }
 
         reader.onload = () => {
             const previewImgUrl = reader.result;
             if (previewImgUrl) {
-                setPreviewImg(previewImgUrl);
+                setPreviewImg([...previewImg, previewImgUrl]);
                 setIsImg(true);
+                // setImg([img.push(previewImgUrl)]);
+                // console.log(img);
             }
         }
     }
     const deleteImg = () => {
+        setImg('이미지 없음');
         setPreviewImg(null);
     }
+    console.log(img, previewImg);
     const Hidden = () => {
         setShow(!show);
         console.log(show);
@@ -322,49 +349,90 @@ export const Box = () => {
     const [value, setValue] = useState('');
     const [value2, setValue2] = useState('');
     const Typing = (e) => {
-        console.log(e.target.value);
         setValue(e.target.value);
     }
     const Typing2 = (e) => {
-        console.log(e.target.value);
         setValue2(e.target.value);
     }
+    const [clicked, setCliked] = useState(false);
     const Examine = (e) => {
+        e.preventDefault();
         if (previewImg != null && value != null && value2 != null) {
-            alert("성공");
+            alert("업로드 완료되었습니다.");
+            setCliked(true);
         }
         else {
             e.preventDefault();
             alert("사진을 업로드 해주세요");
         }
     }
+
+    const getPreviewImg = () => {
+        if (img === null || img.length === 0) {
+            return (
+                <div>
+                </div>
+            );
+        }
+        else {
+            return img.map((el, index) => {
+                return (
+                    <Dives key={index}>
+                        <Main>
+                            {clicked && ((
+                                <Frames imageSrc={previewImg[index]} isImg={isImg ? true : console.log(false)}></Frames>))
+                            }
+                        </Main>
+                    </Dives>
+                )
+            })
+
+        }
+    }
+    const Showing = () => {
+        if (img === null || img.length === 0) {
+            return (
+                <ShowImg src={profile}></ShowImg>
+            );
+        }
+        else {
+            return img.map((el, index) => {
+                return (
+                    <Dives key={index}>
+                        <ShowImg src={previewImg[index]}></ShowImg>
+                    </Dives>
+                )
+            })
+
+        }
+    }
+
     return (
         <Div>
+            <div onClick={handleBackList}></div>
             <ButtonActive active={active} onClick={toggle
             }>
                 <Icon src={anchor} active={active} ></Icon>
             </ButtonActive>
-            <SideBar active={active} >
+            <SideBar active={active}>
                 <Upload >
                     <Form encType='multipart/form-data' >
-                        <ShowImg src={previewImg ? previewImg : profile}></ShowImg>
+                        {Showing()}
                         <DeleteButton onClick={deleteImg}>×</DeleteButton>
                         <Label htmlFor='file' onClick={Hidden} active={show}>
                             <Line ></Line>
                             <Line2 ></Line2>
                         </Label>
+                        <FileInput type='file' id='file' accept='image/*' onChange={(e) => insertImg(e)}></FileInput>
                         <DiscriptionBox>
-                            <FileInput type='file' id='file' accept='image/*' onChange={(e) => insertImg(e)}></FileInput>
                             <DiscriptionTitle placeholder='제목을 입력해주세요. (20자이내)' maxLength={20} onChange={Typing2}></DiscriptionTitle>
                             <DiscriptionWords onChange={Typing} placeholder='사진에 대한 설명을 입력해주세요. (300자이내)' maxLength={300}></DiscriptionWords>
-                            <SubmitBtn type='submit' onClick={Examine}>액자 업로드하기</SubmitBtn>
+                            <SubmitBtn type='submit' onClick={Examine} >액자 업로드하기</SubmitBtn>
                         </DiscriptionBox>
                     </Form>
                 </Upload>
             </SideBar>
-            <Main>
-                <Frames imageSrc={previewImg} isImg={isImg ? true : console.log(false)}></Frames>
-            </Main>
+            {getPreviewImg()}
         </Div>
     );
 }
