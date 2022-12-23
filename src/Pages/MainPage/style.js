@@ -8,7 +8,6 @@ import { React, useState, useEffect, useCallback, useMemo } from "react";
 export const Container = styled.div`
     height: 100vh;
     width: 100vw;
-    background-color:  #F8EFD1;
 `;
 
 export const Nav = styled.div`
@@ -94,6 +93,7 @@ const ButtonActive = styled.div`
     align-items: center;
     justify-content: center;
     position: absolute;
+    z-index: 1000000000;
     width: 54px;
     height: 187px;
     left: 0px;
@@ -104,6 +104,7 @@ const ButtonActive = styled.div`
     animation-name:  ${props => (props.active ? animation : animationReset)};
     animation-duration: 1s;
     cursor: pointer;
+
 `;
 const SideBar = styled.div`
 display: flex;
@@ -169,13 +170,13 @@ bottom:50px;
 width: 486px;
     height: 344px;
 `;
-const DeleteButton = styled.div`
-position:absolute;
-top:10px;
-font-size: 30px;
-position: absolute;
-cursor: pointer;
-`;
+// const DeleteButton = styled.div`
+// position:absolute;
+// top:10px;
+// font-size: 30px;
+// position: absolute;
+// cursor: pointer;
+// `;
 export const UploadImg = styled.div`
 `;
 const Line = styled.div`
@@ -253,18 +254,18 @@ justify-content: space-between;
 const Main = styled.div`
 position: absolute;
 `;
-const Random = (min, max) => Math.random() * (max - min) + min;
-const getRandom = Math.round(Random(10, 70));
+// const Random = (min, max) => Math.random() * (max - min) + min;
+// setPositon(Math.round(Random(10, 70)));
 const Images = styled.img`
 position: relative;
-top:${getRandom}vh;
+top:45vh;
 width: 10vw;
 height: 15vh;
 border: 10px solid white ;
 border-radius: 10px; 
 object-fit: contain;
 object-position: 50% 50%;
-margin-left: 60px;
+margin-left: 150px;
 border: 8px solid #FFFFFF;
 background-color: #FFFFFF;
 transition: all 0.5s;
@@ -284,9 +285,24 @@ height: 25vh;
 width: 25vw;
 `;
 const Dives = styled.div`
-top: 55px;
+display: flex;
 `;
+const Frames = styled.div`
+display: flex;
 
+`;
+const Diver = styled.div`
+display: flex;
+`;
+// const Frames = (props) => {
+// return (
+//     <Dive>
+//         {props.isImg ? (<Images src={props.imageSrc}></Images>)
+//             : null
+//         }
+//     </Dive>
+// );
+// }
 export const Box = ({ history }) => {
     const handleBackList = useCallback(() => {
         const params = {
@@ -298,17 +314,8 @@ export const Box = ({ history }) => {
     const [show, setShow] = useState(false);
     const [isImg, setIsImg] = useState(false);
     const [previewImg, setPreviewImg] = useState([]);
+    const [lastImg, setLastImg] = useState();
     const [img, setImg] = useState([]);
-    const Frames = (props) => {
-        console.log(props.imageSrc[0]);
-        return (
-            <Dive>
-                {props.isImg ? (<Images src={props.imageSrc}></Images>)
-                    : null
-                }
-            </Dive>
-        );
-    }
     const toggle = () => {
         setActive(!active);
     }
@@ -326,21 +333,21 @@ export const Box = ({ history }) => {
             // console.log(date);
             setImg([...img, e.target.files[0]]);
         }
-
         reader.onload = () => {
             const previewImgUrl = reader.result;
             if (previewImgUrl) {
                 setPreviewImg([...previewImg, previewImgUrl]);
+                setLastImg(previewImgUrl);
                 setIsImg(true);
                 // setImg([img.push(previewImgUrl)]);
                 // console.log(img);
             }
         }
     }
-    const deleteImg = () => {
-        setImg('이미지 없음');
-        setPreviewImg(null);
-    }
+    // const deleteImg = () => {
+    //     setImg('이미지 없음');
+    //     setPreviewImg(null);
+    // }
     console.log(img, previewImg);
     const Hidden = () => {
         setShow(!show);
@@ -378,11 +385,11 @@ export const Box = ({ history }) => {
             return img.map((el, index) => {
                 return (
                     <Dives key={index}>
-                        <Main>
-                            {clicked && ((
-                                <Frames imageSrc={previewImg[index]} isImg={isImg ? true : console.log(false)}></Frames>))
+                        <Dive>
+                            {isImg ? (<Images src={previewImg[index]}></Images>)
+                                : null
                             }
-                        </Main>
+                        </Dive>
                     </Dives>
                 )
             })
@@ -399,13 +406,18 @@ export const Box = ({ history }) => {
             return img.map((el, index) => {
                 return (
                     <Dives key={index}>
-                        <ShowImg src={previewImg[index]}></ShowImg>
+                        <Main>
+                            {clicked && (
+                                <Frames isImg={isImg ? true : console.log(false)} >
+                                </Frames>
+                            )}
+                        </Main>
                     </Dives>
-                )
+                );
             })
-
         }
     }
+
 
     return (
         <Div>
@@ -417,8 +429,10 @@ export const Box = ({ history }) => {
             <SideBar active={active}>
                 <Upload >
                     <Form encType='multipart/form-data' >
+                        {isImg &&
+                            <ShowImg src={lastImg}></ShowImg>
+                        }
                         {Showing()}
-                        <DeleteButton onClick={deleteImg}>×</DeleteButton>
                         <Label htmlFor='file' onClick={Hidden} active={show}>
                             <Line ></Line>
                             <Line2 ></Line2>
@@ -432,8 +446,10 @@ export const Box = ({ history }) => {
                     </Form>
                 </Upload>
             </SideBar>
-            {getPreviewImg()}
-        </Div>
+            <Diver>
+                {getPreviewImg()}
+            </Diver>
+        </Div >
     );
 }
 
