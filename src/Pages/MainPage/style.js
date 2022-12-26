@@ -2,6 +2,8 @@ import styled, { keyframes } from 'styled-components';
 import anchor from "../../img/닫는꺾쇠.png";
 import profile from "../../img/사진 가져오기.png";
 import axios from 'axios';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import { css } from '@emotion/react'
 import { React, useState, useEffect, useCallback, useMemo } from "react";
 
@@ -24,27 +26,31 @@ export const Nav = styled.div`
 
 export const Logo = styled.img`
 padding-left: 40px;
+background: #FFFFFF;
 `;
 
 export const Move = styled.div`
     display: flex;
+    background: #FFFFFF;
 `;
 export const Stick = styled.div`
 width: 1px;
 height: inherit;
 background-color: lightgray;
 margin: 0px 40px;
+
 `;
 export const Add = styled.div`
-
+    background: #FFFFFF;
 `;
 
 export const Info = styled.div`
-
+    background: #FFFFFF;
 `;
 
 export const User = styled.div`
     padding-right:30px ;
+    background: #FFFFFF;
     `;
 
 
@@ -84,6 +90,8 @@ const IconAnimationReset = keyframes`
 export const Icon = styled.img`
     height: 23px;
     width: 10px;
+background: #FFFFFF;
+
     animation-fill-mode: forwards;
     animation-name:   ${props => (props.active ? IconAnimation : IconAnimationReset)};
     animation-duration: 1s;
@@ -126,6 +134,8 @@ justify-content: space-evenly;
 flex-direction: column;
 width: 486px;
 margin-top: 44px;
+background: #FFFFFF;
+
 `;
 export const UploadInput = styled.input`
 
@@ -146,6 +156,7 @@ const FileInput = styled.input`
     overflow: hidden;
     clip: rect(0,0,0,0);
     border:none;
+    
 `;
 
 const Label = styled.label`
@@ -178,6 +189,7 @@ width: 486px;
 // cursor: pointer;
 // `;
 export const UploadImg = styled.div`
+
 `;
 const Line = styled.div`
 width: 2px;
@@ -196,6 +208,7 @@ transform:rotate(0deg);
 
 `;
 const Form = styled.form`
+background: #FFFFFF;
 `;
 const DiscriptionTitle = styled.input`
 width: 466px;
@@ -209,9 +222,13 @@ font-family: "ImcreSoojin";
 &::placeholder{
         color:#D8D8D8;
     }
+background: #FFFFFF;
+
 `;
 const DiscriptionWords = styled.textarea`
 display: flex;
+background: #FFFFFF;
+
 justify-content: center;
 align-items: center;
 text-justify:center;
@@ -250,9 +267,13 @@ display: flex;
 flex-direction: column;
 height: 500px;
 justify-content: space-between;
+background: #FFFFFF;
+
 `;
 const Main = styled.div`
 position: absolute;
+width: 200vw;
+
 `;
 // const Random = (min, max) => Math.random() * (max - min) + min;
 // setPositon(Math.round(Random(10, 70)));
@@ -281,15 +302,12 @@ height: 100%;
 `;
 const Dive = styled.div`
 display: flex;
-height: 25vh;
-width: 25vw;
 `;
 const Dives = styled.div`
 display: flex;
 `;
 const Frames = styled.div`
 display: flex;
-
 `;
 const Diver = styled.div`
 display: flex;
@@ -348,29 +366,39 @@ export const Box = ({ history }) => {
     //     setImg('이미지 없음');
     //     setPreviewImg(null);
     // }
-    console.log(img, previewImg);
     const Hidden = () => {
         setShow(!show);
+
         console.log(show);
     }
     const [value, setValue] = useState('');
     const [value2, setValue2] = useState('');
     const Typing = (e) => {
         setValue(e.target.value);
+        console.log(value);
     }
     const Typing2 = (e) => {
         setValue2(e.target.value);
     }
     const [clicked, setCliked] = useState(false);
+
     const Examine = (e) => {
         e.preventDefault();
-        if (previewImg != null && value != null && value2 != null) {
-            alert("업로드 완료되었습니다.");
+        if (previewImg != null && value !== "" && value2 !== "") {
+            toast.success("업로드 완료되었습니다", {
+                autoClose: 3000,
+                position: toast.POSITION.TOP_RIGHT
+            });
             setCliked(true);
+
         }
         else {
             e.preventDefault();
-            alert("사진을 업로드 해주세요");
+            setCliked(false);
+            toast.error("비어있는 칸이 있습니다", {
+                autoClose: 3000,
+                position: toast.POSITION.TOP_RIGHT
+            });
         }
     }
 
@@ -396,6 +424,7 @@ export const Box = ({ history }) => {
 
         }
     }
+
     const Showing = () => {
         if (img === null || img.length === 0) {
             return (
@@ -447,8 +476,10 @@ export const Box = ({ history }) => {
                 </Upload>
             </SideBar>
             <Diver>
-                {getPreviewImg()}
+                {clicked &&
+                    getPreviewImg()}
             </Diver>
+            <ToastContainer></ToastContainer>
         </Div >
     );
 }

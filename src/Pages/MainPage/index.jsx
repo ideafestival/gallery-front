@@ -1,6 +1,7 @@
 import { React } from "react";
 import * as S from "./style";
 import logo from "../../img/logo-beige.png";
+
 const Main = () => {
 	return (
 		<div>
