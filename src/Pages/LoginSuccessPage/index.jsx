@@ -1,6 +1,7 @@
 import React from "react";
 import * as S from "./style";
 import logo from "../../img/로고-파란색.png";
+import { Link } from "react-router-dom";
 const SuccessLogin = () => {
 	return (
 		<div>
@@ -20,6 +21,15 @@ const SuccessLogin = () => {
 							</span>
 						</S.Ment>
 					</S.ButtonBox>
+					<Link
+						to="/"
+						style={{
+							display: "flex",
+							justifyContent: "center",
+						}}
+					>
+						<S.MoveToMain>확인하기</S.MoveToMain>
+					</Link>
 					<S.PageBar>
 						<S.PageBars
 							style={{ backgroundColor: " #406FBC" }}

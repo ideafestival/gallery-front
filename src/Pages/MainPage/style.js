@@ -50,12 +50,17 @@ export const Info = styled.div`
 `;
 
 export const User = styled.div`
-    padding-right:30px ;
-    background: #FFFFFF;
-    text-decoration: none;
+display: flex;
+justify-content: center;
+align-items: center;
+text-decoration: none;
     color: black;
+    padding-right: 20px;
     `;
-
+export const UserImg = styled.img`
+width: 40px;
+padding-right: 10px;
+`;
 
 
 const animation = keyframes`
@@ -122,7 +127,7 @@ display: flex;
 z-index: 10000;
 justify-content: center;
 width: 625px;
-height : 880px;
+height : 915px;
 position: absolute;
 background-color: white;
 bottom: 0px;
@@ -161,7 +166,9 @@ const FileInput = styled.input`
     border:none;
     
 `;
-
+export const UserBoxs = styled.div`
+display: flex;
+`;
 const Label = styled.label`
     display: flex;
     justify-content: center;

@@ -3,10 +3,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import { gapi } from 'gapi-script';
 import axios from "axios";
-import styled from 'styled-components';
-
+import { Link } from "react-router-dom";
+import { useNavigate, useLocation, Outlet } from "react-router-dom";
 function Googlebutton() {
-
+    const navigate = useNavigate();
+    // const { path } = useLocation();
     const clientId = '749258175280-j6no56csatjc94v44rm7d06f868s3g14.apps.googleusercontent.com';
     useEffect(() => {
         const initClient = () => {
@@ -30,6 +31,10 @@ function Googlebutton() {
         localStorage.setItem("email", email);
         localStorage.setItem("img", imgUrl);
         setIslogin(true);
+        setTimeout(() => {
+            if (islogin === true)
+                navigate("/login/success");
+        }, 2000);
     };
 
     // axios.post("http://localhost:8080/signup", {

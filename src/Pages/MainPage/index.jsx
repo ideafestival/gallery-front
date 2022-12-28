@@ -3,6 +3,10 @@ import * as S from "./style";
 import logo from "../../img/logo-beige.png";
 import { Link } from "react-router-dom";
 const Main = () => {
+	const Name = localStorage.getItem("name");
+	const ProfileImg = localStorage.getItem("img");
+	console.log(Name);
+	console.log(ProfileImg);
 	return (
 		<div>
 			<S.Container>
@@ -14,7 +18,13 @@ const Main = () => {
 						<S.Info>프로젝트 정보</S.Info>
 					</S.Move>
 					<Link to="/login">
-						<S.User>땡떙님의 정보</S.User>
+						<S.UserBoxs>
+							<S.UserImg
+								src={ProfileImg}
+								alt="이미지"
+							></S.UserImg>
+							<S.User>{Name}님의 정보</S.User>
+						</S.UserBoxs>
 					</Link>
 				</S.Nav>
 				<S.Scroll>

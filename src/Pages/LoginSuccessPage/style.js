@@ -67,3 +67,17 @@ export const GoogleBtn = styled.div`
 export const Span = styled.span`
     padding: 40px 0px;
 `;
+
+export const MoveToMain = styled.div`
+    background-color: #406FBC;
+position: absolute;
+height: 100px;
+width: 500px;
+bottom: 170px;
+border-radius: 10px;
+display: flex;
+justify-content: center;
+align-items: center;
+color: white;
+font-size: 25px;
+`;
