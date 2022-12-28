@@ -14,6 +14,7 @@ function App() {
               path="/login"
               element={<P.Login />}
             ></Route>
+            <Route path='/login/success' element={<P.SuccessLogin />}></Route>
           </Routes>
         </BrowserRouter>
       </S.Body>

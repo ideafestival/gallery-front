@@ -18,7 +18,6 @@ const Login = () => {
 							style={{ backgroundColor: " #406FBC" }}
 						></S.PageBars>
 						<S.PageBars></S.PageBars>
-						<S.PageBars></S.PageBars>
 					</S.PageBar>
 				</S.Box>
 			</S.Container>

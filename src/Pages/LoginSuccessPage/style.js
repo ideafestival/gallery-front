@@ -30,11 +30,15 @@ background-color: white;
 
 export const Ment = styled.div`
 display: flex;
+flex-direction: column;
 justify-content: center;
 align-items: center;
 background-color: white;
 padding-bottom:30px;
 color: grey;
+width: 298px;
+height: 209px;
+text-align: center;
 `;
 export const Login = styled.img`
 background-color: white;
@@ -43,9 +47,9 @@ border-radius: 5px;
 `;
 export const PageBar = styled.div`
 display: flex;
+justify-content: center;
 width: 500px;
 background-color: white;
-justify-content: center;
 `;
 
 export const PageBars = styled.div`
@@ -57,4 +61,9 @@ margin:0px 2px;
 `;
 
 export const GoogleBtn = styled.div`
+`;
+
+
+export const Span = styled.span`
+    padding: 40px 0px;
 `;

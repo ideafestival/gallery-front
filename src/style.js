@@ -6,6 +6,5 @@ export const Body = styled.div`
     width: 100vw;
     justify-content: center;
     align-items: center;
-    background-color:  #F8EFD1;
     overflow: visible;
 `;
