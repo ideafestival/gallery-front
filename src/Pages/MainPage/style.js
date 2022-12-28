@@ -5,16 +5,17 @@ import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import { css } from '@emotion/react'
-import { React, useState, useEffect, useCallback, useMemo } from "react";
-
+import { React, useState, useEffect, useCallback } from "react";
+import { Link } from 'react-router-dom';
+import ModalBasic from '../MainPage/modal';
 export const Container = styled.div`
-    height: 100vh;
+    height: 100%;
     width: 100vw;
 `;
 
 export const Nav = styled.div`
     display: flex;
-    position: absolute;
+    position: fixed;
     width: 100vw;
     background: #FFFFFF;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -51,6 +52,8 @@ export const Info = styled.div`
 export const User = styled.div`
     padding-right:30px ;
     background: #FFFFFF;
+    text-decoration: none;
+    color: black;
     `;
 
 
@@ -119,10 +122,10 @@ display: flex;
 z-index: 10000;
 justify-content: center;
 width: 625px;
-height : 911px;
+height : 880px;
 position: absolute;
 background-color: white;
-bottom: 0;
+bottom: 0px;
 left: -625px;
 animation-fill-mode: forwards;
 animation-duration: 1s;
@@ -179,7 +182,7 @@ const ShowImg = styled.img`
 position:relative;
 bottom:50px;
 width: 486px;
-    height: 344px;
+    height: 320px;
 `;
 // const DeleteButton = styled.div`
 // position:absolute;
@@ -270,11 +273,7 @@ justify-content: space-between;
 background: #FFFFFF;
 
 `;
-const Main = styled.div`
-position: absolute;
-width: 200vw;
 
-`;
 // const Random = (min, max) => Math.random() * (max - min) + min;
 // setPositon(Math.round(Random(10, 70)));
 const Images = styled.img`
@@ -296,9 +295,12 @@ box-shadow: 5px 10px 10px 2px rgba(0, 0, 0, 0.1);
     height: 25vh;
 }
 `;
+export const Scroll = styled.div`
+background-color:  #F8EFD1;
+width: 500vw;
+height: 100vh;
+`;
 const Div = styled.div`
-width: 100vw;
-height: 100%;
 `;
 const Dive = styled.div`
 display: flex;
@@ -306,12 +308,11 @@ display: flex;
 const Dives = styled.div`
 display: flex;
 `;
-const Frames = styled.div`
-display: flex;
-`;
 const Diver = styled.div`
 display: flex;
 `;
+const SelectImg = styled.img``;
+
 // const Frames = (props) => {
 // return (
 //     <Dive>
@@ -339,16 +340,13 @@ export const Box = ({ history }) => {
     }
     // const [date, setDate] = useState([]);
 
+    const [clicked, setCliked] = useState(false);
 
     const insertImg = (e) => {
-        // console.log(e.target.files[0]);
         let reader = new FileReader();
 
         if (e.target.files[0]) {
             reader.readAsDataURL(e.target.files[0]);
-            // const h = img[0].lastModifiedDate;
-            // setDate([date.push(h)]);
-            // console.log(date);
             setImg([...img, e.target.files[0]]);
         }
         reader.onload = () => {
@@ -357,30 +355,20 @@ export const Box = ({ history }) => {
                 setPreviewImg([...previewImg, previewImgUrl]);
                 setLastImg(previewImgUrl);
                 setIsImg(true);
-                // setImg([img.push(previewImgUrl)]);
-                // console.log(img);
             }
         }
     }
-    // const deleteImg = () => {
-    //     setImg('이미지 없음');
-    //     setPreviewImg(null);
-    // }
     const Hidden = () => {
         setShow(!show);
-
-        console.log(show);
     }
     const [value, setValue] = useState('');
     const [value2, setValue2] = useState('');
     const Typing = (e) => {
         setValue(e.target.value);
-        console.log(value);
     }
     const Typing2 = (e) => {
         setValue2(e.target.value);
     }
-    const [clicked, setCliked] = useState(false);
 
     const Examine = (e) => {
         e.preventDefault();
@@ -390,7 +378,6 @@ export const Box = ({ history }) => {
                 position: toast.POSITION.TOP_RIGHT
             });
             setCliked(true);
-
         }
         else {
             e.preventDefault();
@@ -402,7 +389,15 @@ export const Box = ({ history }) => {
         }
     }
 
-    const getPreviewImg = () => {
+    const Showing = () => {
+        if (img === null || img.length === 0) {
+            return (
+                <ShowImg src={profile}></ShowImg>
+            );
+        }
+    }
+    const [content, setContent] = useState('');
+    const Uploading = () => {
         if (img === null || img.length === 0) {
             return (
                 <div>
@@ -414,40 +409,23 @@ export const Box = ({ history }) => {
                 return (
                     <Dives key={index}>
                         <Dive>
-                            {isImg ? (<Images src={previewImg[index]}></Images>)
-                                : null
-                            }
+                            <Images src={previewImg[index]} id={index} onClick={(e) => Modal(e)}></Images>
                         </Dive>
-                    </Dives>
+                    </Dives >
                 )
             })
-
         }
     }
-
-    const Showing = () => {
-        if (img === null || img.length === 0) {
-            return (
-                <ShowImg src={profile}></ShowImg>
-            );
-        }
-        else {
-            return img.map((el, index) => {
-                return (
-                    <Dives key={index}>
-                        <Main>
-                            {clicked && (
-                                <Frames isImg={isImg ? true : console.log(false)} >
-                                </Frames>
-                            )}
-                        </Main>
-                    </Dives>
-                );
-            })
-        }
+    const Modal = (e) => {
+        console.log(e.target.src);
+        setContent(e.target.src);
+        return (
+            <div>
+                <img src={e.target.src} alt="안녕"></img>
+                {content && <ModalBasic src={content}></ModalBasic>}
+            </div>
+        );
     }
-
-
     return (
         <Div>
             <div onClick={handleBackList}></div>
@@ -458,10 +436,10 @@ export const Box = ({ history }) => {
             <SideBar active={active}>
                 <Upload >
                     <Form encType='multipart/form-data' >
-                        {isImg &&
-                            <ShowImg src={lastImg}></ShowImg>
+                        {isImg ?
+                            <ShowImg src={lastImg}></ShowImg> :
+                            Showing()
                         }
-                        {Showing()}
                         <Label htmlFor='file' onClick={Hidden} active={show}>
                             <Line ></Line>
                             <Line2 ></Line2>
@@ -469,15 +447,15 @@ export const Box = ({ history }) => {
                         <FileInput type='file' id='file' accept='image/*' onChange={(e) => insertImg(e)}></FileInput>
                         <DiscriptionBox>
                             <DiscriptionTitle placeholder='제목을 입력해주세요. (20자이내)' maxLength={20} onChange={Typing2}></DiscriptionTitle>
-                            <DiscriptionWords onChange={Typing} placeholder='사진에 대한 설명을 입력해주세요. (300자이내)' maxLength={300}></DiscriptionWords>
+                            <DiscriptionWords onChange={Typing} placeholder='사진에 대한 설명을 입력해주세요. (100자이내)' maxLength={100}></DiscriptionWords>
                             <SubmitBtn type='submit' onClick={Examine} >액자 업로드하기</SubmitBtn>
                         </DiscriptionBox>
                     </Form>
                 </Upload>
             </SideBar>
-            <Diver>
+            <Diver >
                 {clicked &&
-                    getPreviewImg()}
+                    Uploading()}
             </Diver>
             <ToastContainer></ToastContainer>
         </Div >

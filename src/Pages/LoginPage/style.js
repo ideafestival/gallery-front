@@ -54,3 +54,5 @@ width: 200px;
 border-radius: 5px;
 margin:0px 2px;
 `;
+
+export const GoogleBtn = styled.div``;

@@ -1,7 +1,7 @@
 import { React } from "react";
 import * as S from "./style";
 import logo from "../../img/logo-beige.png";
-
+import { Link } from "react-router-dom";
 const Main = () => {
 	return (
 		<div>
@@ -13,11 +13,15 @@ const Main = () => {
 						<S.Stick></S.Stick>
 						<S.Info>프로젝트 정보</S.Info>
 					</S.Move>
-					<S.User>땡떙님의 정보</S.User>
+					<Link to="/login">
+						<S.User>땡떙님의 정보</S.User>
+					</Link>
 				</S.Nav>
-				<S.Box>
-					<S.Upload></S.Upload>
-				</S.Box>
+				<S.Scroll>
+					<S.Box>
+						<S.Upload></S.Upload>
+					</S.Box>
+				</S.Scroll>
 			</S.Container>
 		</div>
 	);
