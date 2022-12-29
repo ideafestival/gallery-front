@@ -1,13 +1,11 @@
 import styled, { keyframes } from 'styled-components';
 import anchor from "../../img/닫는꺾쇠.png";
 import profile from "../../img/사진 가져오기.png";
-import axios from 'axios';
+import Xbutton from "../../img/X.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import { css } from '@emotion/react'
 import { React, useState, useEffect, useCallback } from "react";
-import { Link } from 'react-router-dom';
-import ModalBasic from '../MainPage/modal';
+import Canvas from "./canvas";
 export const Container = styled.div`
     height: 100%;
     width: 100vw;
@@ -318,8 +316,28 @@ display: flex;
 const Diver = styled.div`
 display: flex;
 `;
-const SelectImg = styled.img``;
-
+const ModalWindow = styled.div`
+position: absolute;
+width: 70vw;
+height: 70vh;
+background-color: white;
+border-radius: 10px;
+display: flex;
+justify-content: left;
+align-items: center;
+box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+`;
+const Xbtn = styled.img`
+position: absolute;
+cursor: pointer;
+top:10px;
+left: 10px;
+`;
+const ModalImg = styled.img`
+margin-left: 40px;
+width: 30vw;
+height:60vh;
+`;
 // const Frames = (props) => {
 // return (
 //     <Dive>
@@ -342,6 +360,7 @@ export const Box = ({ history }) => {
     const [previewImg, setPreviewImg] = useState([]);
     const [lastImg, setLastImg] = useState();
     const [img, setImg] = useState([]);
+    const [modal, setModal] = useState(false);
     const toggle = () => {
         setActive(!active);
     }
@@ -373,6 +392,7 @@ export const Box = ({ history }) => {
     const Typing = (e) => {
         setValue(e.target.value);
     }
+    localStorage.setItem('discription', value);
     const Typing2 = (e) => {
         setValue2(e.target.value);
     }
@@ -403,7 +423,6 @@ export const Box = ({ history }) => {
             );
         }
     }
-    const [content, setContent] = useState('');
     const Uploading = () => {
         if (img === null || img.length === 0) {
             return (
@@ -416,22 +435,23 @@ export const Box = ({ history }) => {
                 return (
                     <Dives key={index}>
                         <Dive>
-                            <Images src={previewImg[index]} id={index} onClick={(e) => Modal(e)}></Images>
+                            <Images src={previewImg[index]} id={index} onClick={(index) => setModal(true)}></Images>
                         </Dive>
                     </Dives >
                 )
             })
         }
     }
-    const Modal = (e) => {
-        console.log(e.target.src);
-        setContent(e.target.src);
+    const Modal = (index) => {
+        console.log(index);
         return (
-            <div>
-                <img src={e.target.src} alt="안녕"></img>
-                {content && <ModalBasic src={content}></ModalBasic>}
+            <div style={{ position: "absolute", width: "100vw", height: "70vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <ModalWindow>
+                    <ModalImg src={previewImg}></ModalImg>
+                    <Xbtn src={Xbutton} alt="닫기" onClick={() => setModal(false)}></Xbtn>
+                </ModalWindow>
             </div>
-        );
+        )
     }
     return (
         <Div>
@@ -461,9 +481,13 @@ export const Box = ({ history }) => {
                 </Upload>
             </SideBar>
             <Diver >
-                {clicked &&
-                    Uploading()}
+                {clicked ?
+                    <Uploading /> : null}
             </Diver>
+            {modal ? <Modal /> : null}
+            {modal ?
+                <Canvas /> : null
+            }
             <ToastContainer></ToastContainer>
         </Div >
     );
